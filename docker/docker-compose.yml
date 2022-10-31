@@ -4,10 +4,9 @@ networks:
     laravel:
 
 services:
-
     nginx:
         env_file:
-            - docker-compose.env
+            - /web.env
 
         image: nginx:stable-alpine
         container_name: nginx
@@ -23,6 +22,8 @@ services:
             - laravel
 
     mysql:
+        env_file:
+            - /web.env
         image: mysql:latest
         container_name: mysql
         restart: unless-stopped
@@ -44,6 +45,8 @@ services:
             - laravel
 
     php:
+        env_file:
+            - /web.env
         build:
             context: ./dockerfiles
             dockerfile: php.dockerfile
@@ -84,6 +87,8 @@ services:
             - laravel
 
     artisan:
+        env_file:
+            - /web.env
         build:
             context: ./dockerfiles
             dockerfile: artisan.dockerfile
