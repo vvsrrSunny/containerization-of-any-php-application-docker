@@ -1,14 +1,14 @@
 version: "3.9"
-
+    
 networks:
     laravel:
 
-
 services:
-    env_file:
-        - docker-compose.env
 
     nginx:
+        env_file:
+            - docker-compose.env
+
         image: nginx:stable-alpine
         container_name: nginx
         ports:
@@ -94,6 +94,7 @@ services:
             - mysql
             - composer
         working_dir: /var/www/${PROJECT_NAME}
-        entrypoint: php artisan
+        # entrypoint: php artisan
+        command: tail -f /dev/null
         networks:
             - laravel
