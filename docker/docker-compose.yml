@@ -6,7 +6,7 @@ networks:
 services:
     nginx:
         env_file:
-            - /web.env
+            - /.env
 
         image: nginx:stable-alpine
         container_name: nginx
@@ -23,7 +23,7 @@ services:
 
     mysql:
         env_file:
-            - /web.env
+            - /.env
         image: mysql:latest
         container_name: mysql
         restart: unless-stopped
@@ -46,7 +46,7 @@ services:
 
     php:
         env_file:
-            - /web.env
+            - /.env
         build:
             context: ./dockerfiles
             dockerfile: php.dockerfile
@@ -88,7 +88,7 @@ services:
 
     artisan:
         env_file:
-            - /web.env
+            - /.env
         build:
             context: ./dockerfiles
             dockerfile: artisan.dockerfile
@@ -99,7 +99,6 @@ services:
             - mysql
             - composer
         working_dir: /var/www/${PROJECT_NAME}
-        # entrypoint: php artisan
-        command: tail -f /dev/null
+        entrypoint: php artisan
         networks:
             - laravel
