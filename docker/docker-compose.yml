@@ -59,6 +59,8 @@ services:
             - laravel
 
     composer:
+        env_file:
+            - /.env
         image: composer:latest
         container_name: composer
         volumes:
@@ -74,6 +76,8 @@ services:
             - laravel
 
     npm:
+        env_file:
+            - /.env
         image: node:latest
         container_name: npm
         volumes:
