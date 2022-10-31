@@ -5,13 +5,16 @@ networks:
 
 
 services:
+    env_file:
+        - docker-compose.env
+
     nginx:
         image: nginx:stable-alpine
         container_name: nginx
         ports:
             - 8088:80
         volumes:
-            - ../:/var/www/l9-with-sass
+            - ../:${project_name}
             - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
         depends_on:
             - php
@@ -59,8 +62,7 @@ services:
             - ../:/var/www/l9-with-sass
         depends_on:
             - php
-        working_dir: /var/www/l9-with-sass
-         # writes npm before our command. So, instead `docker-compose run --rm composer composer install` we can go for `docker-compose run --rm composer install`
+        working_dir: /var/www/l9-with-sass # writes npm before our command. So, instead `docker-compose run --rm composer composer install` we can go for `docker-compose run --rm composer install`
         entrypoint: composer
         command: install
         # this command will make the composer run for ever.
@@ -95,6 +97,3 @@ services:
         entrypoint: php artisan
         networks:
             - laravel
-
-
-
