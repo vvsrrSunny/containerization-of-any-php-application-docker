@@ -3,15 +3,17 @@ version: "3.9"
 networks:
     laravel:
 
-
 services:
     nginx:
+        env_file:
+            - /.env
+
         image: nginx:stable-alpine
         container_name: nginx
         ports:
             - 8088:80
         volumes:
-            - ../:/var/www/l9-with-sass
+            - ../:/var/www/${PROJECT_NAME}
             - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
         depends_on:
             - php
@@ -20,6 +22,8 @@ services:
             - laravel
 
     mysql:
+        env_file:
+            - /.env
         image: mysql:latest
         container_name: mysql
         restart: unless-stopped
@@ -41,6 +45,8 @@ services:
             - laravel
 
     php:
+        env_file:
+            - /.env
         build:
             context: ./dockerfiles
             dockerfile: php.dockerfile
@@ -48,53 +54,54 @@ services:
         ports:
             - 9000:9000
         volumes:
-            - ../:/var/www/l9-with-sass
+            - ../:/var/www/${PROJECT_NAME}
         networks:
             - laravel
 
     composer:
+        env_file:
+            - /.env
         image: composer:latest
         container_name: composer
         volumes:
-            - ../:/var/www/l9-with-sass
+            - ../:/var/www/${PROJECT_NAME}
         depends_on:
             - php
-        working_dir: /var/www/l9-with-sass
-         # writes npm before our command. So, instead `docker-compose run --rm composer composer install` we can go for `docker-compose run --rm composer install`
+        working_dir: /var/www/${PROJECT_NAME} # writes npm before our command. So, instead `docker-compose run --rm composer composer install` we can go for `docker-compose run --rm composer install`
         entrypoint: composer
-        command: install
+        # command: install
         # this command will make the composer run for ever.
         # command: tail -f /dev/null
         networks:
             - laravel
 
     npm:
+        env_file:
+            - /.env
         image: node:latest
         container_name: npm
         volumes:
-            - ../:/var/www/l9-with-sass
-        working_dir: /var/www/l9-with-sass
+            - ../:/var/www/${PROJECT_NAME}
+        working_dir: /var/www/${PROJECT_NAME}
         # writes npm before our command. So, instead `docker-compose run --rm npm npm install` we can go for `docker-compose run --rm npm install`
         entrypoint: npm
         # keep this command to install npm dependencies if entry point is
-        command: install
+        # command: install
         networks:
             - laravel
 
     artisan:
+        env_file:
+            - /.env
         build:
             context: ./dockerfiles
             dockerfile: artisan.dockerfile
         container_name: artisan
         volumes:
-            - ../:/var/www/l9-with-sass
-        depends_on:
-            - mysql
-            - composer
-        working_dir: /var/www/l9-with-sass
+            - ../:/var/www/${PROJECT_NAME}
+        # depends_on:
+        #     - mysql
+        working_dir: /var/www/${PROJECT_NAME}
         entrypoint: php artisan
         networks:
             - laravel
-
-
-
