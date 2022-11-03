@@ -67,8 +67,8 @@ services:
             - ../:/var/www/${PROJECT_NAME}
         depends_on:
             - php
-        working_dir: /var/www/${PROJECT_NAME} # writes npm before our command. So, instead `docker-compose run --rm composer composer install` we can go for `docker-compose run --rm composer install`
-        entrypoint: composer
+        working_dir: /var/www/${PROJECT_NAME} 
+        entrypoint: composer # writes npm before our command. So, instead `docker-compose run --rm composer composer install` we can go for `docker-compose run --rm composer install`
         # command: install
         # this command will make the composer run for ever.
         # command: tail -f /dev/null
